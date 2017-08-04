@@ -7,6 +7,8 @@ import com.netflix.hystrix.HystrixRequestCache;
 import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategyDefault;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * ﻿请求缓存可以让(CommandKey/CommandGroup)相同的情况下,直接共享结果，降低依赖调用次数，在高并发和CacheKey碰撞率高场景下可以提升性能.
  */
@@ -30,7 +32,7 @@ public class CacheCommand extends HystrixCommand<String> {
         return String.valueOf(id);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException {
         HystrixRequestContext context = HystrixRequestContext.initializeContext();
         try {
             CacheCommand command2a = new CacheCommand(2);
@@ -53,5 +55,6 @@ public class CacheCommand extends HystrixCommand<String> {
         } finally {
             context.shutdown();
         }
+        TimeUnit.MILLISECONDS.sleep(100000);
     }
 }
